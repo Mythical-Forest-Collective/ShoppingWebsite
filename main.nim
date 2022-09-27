@@ -1,10 +1,7 @@
-import std/[options, asyncdispatch, os, sharedtables, sequtils, strutils, macros]
+import std/[options, asyncdispatch, os, sharedtables, sequtils, strutils, macros, unicode]
 
 import prologue
 import prologue/middlewares/staticfile
-
-const EXTENSIONS_TO_SERVE = @[".html", ".css"]
-const DO_NOT_SERVE: seq[string] = @[]
 
 # Refuse to compile if both is defined since it is illogical
 when defined(staticPages) and defined(dynamicPages):
@@ -30,14 +27,6 @@ let app = newApp()
 
 app.get("/", (proc(ctx: Context) {.async.} = resp redirect("/index.html")))
 
-static:
-  var routes = ""
-  for file in walkDirRec("html"):
-    routes &= "proc " & file.replace($DirSep, "").replace(".", "") & "(ctx: Context) = resp getPage(\"" &
-    file & "\")\n\n"
-
-    routes &= "app.get"
-
-  writeFile("routes.nim", routes)
+include ./routes
 
 app.run()

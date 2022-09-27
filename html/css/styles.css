@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Wizzta";
+  src: url("/resources/fonts/wizzta.ttf");
+}
+
+@font-face {
+  font-family: "MagicSchool";
+  src: url("/resources/fonts/magicschool.ttf");
+}
+
+@font-face {
+  font-family: "Rudiment";
+  src: url("/resources/fonts/rudiment.ttf");
+}
+
+body {
+  background-color: #470772;
+}
+
+.stoneblock {
+  width: 90%;
+  margin: auto;
+  background-color: #494949;
+}
+
+.stoneblocktext {
+  color: #9b9b9b;
+  font-family: "Rudiment";
+  font-size: 30px;
+}
