@@ -2,7 +2,7 @@ import std/[options, asyncdispatch, os, sharedtables, sequtils, strutils, macros
 
 import prologue
 import prologue/middlewares/staticfile
-
+# Ah we can fix. try setting to text/<fileext>?
 # Refuse to compile if both is defined since it is illogical
 when defined(staticPages) and defined(dynamicPages):
   {.error: "`staticPages` and `dynamicPages` can't be used at the same time!".}

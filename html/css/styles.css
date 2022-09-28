@@ -13,8 +13,11 @@
   src: url("/resources/fonts/rudiment.ttf");
 }
 
+/* kinda nice! but needs to be fixed size-wize*/
+/* hmm? */
 body {
-  background-color: #470772;
+  background-image: url("/resources/imgs/background_3840x2160.jpg");
+  background-size: cover;
 }
 
 .stoneblock {

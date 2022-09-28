@@ -2,12 +2,25 @@
 
 import std/[os, strutils, unicode]
 
-const EXTENSIONS_TO_SERVE = @[".html", ".css", ".ttf"]
+const EXTENSIONS_TO_SERVE = @[".html", ".css", ".ttf", ".jpg"]
 const DO_NOT_SERVE: seq[string] = @[]
 
 proc quoted(x: string): string = result.addQuoted(x)
 
-var routes = ""
+const initialCode = """## AUTOMATICALLY GENERATED!!! DO NOT EDIT!!! ##
+import std/[strformat, strutils, mimetypes]
+
+var m = newMimetypes()
+
+proc returnAppropriateType(ctx: Context, page: string): Future[void] {.thread.} =
+  ctx.response.body = getPage(page)
+  var mimeType = m.getMimetype((page.split(".")[^1]))
+  ctx.response.setHeader("content-type", fmt"{mimeType}; charset=UTF-8")
+  result = newFuture[void]()
+
+"""
+
+var routes = initialCode
 for file in walkDirRec("html", relative=true):
   for ext in EXTENSIONS_TO_SERVE:
     if file.endsWith(ext):
@@ -19,7 +32,7 @@ for file in walkDirRec("html", relative=true):
         ).title().replace(" ", "")
 
         routes &= "proc " & routeName & "(ctx: Context) {.async.}" &
-        " = resp getPage(\"" & ("html" / file) & "\")\n"
+        " = complete(returnAppropriateType(ctx, \"" & ("html" / file) & "\"))\n"
 
         routes &= "app.get(" & quoted("/"&file) & ", " & routeName & ")\n\n"
 
