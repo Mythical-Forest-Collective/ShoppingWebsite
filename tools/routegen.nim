@@ -2,16 +2,22 @@
 
 import std/[os, strutils, unicode]
 
-const EXTENSIONS_TO_SERVE = @[".html", ".css", ".ttf", ".jpg"]
+# Allowed file extensions here, probably a better way to do this
+const EXTENSIONS_TO_SERVE = @[".html", ".less", ".ttf", ".jpg", ".js"]
+# All the files we should not serve, if we want to exclude a file for whatever reason
 const DO_NOT_SERVE: seq[string] = @[]
 
+# Nifty proc that is not inline
 proc quoted(x: string): string = result.addQuoted(x)
 
+# The code we want the generated file to start with
 const initialCode = """## AUTOMATICALLY GENERATED!!! DO NOT EDIT!!! ##
-import std/[strformat, strutils, mimetypes]
+import std/[strformat, mimetypes] # `strutils` is already imported in our code
 
 var m = newMimetypes()
+m.register("less", "text/css")
 
+# Automatically get the correct mimetype
 proc returnAppropriateType(ctx: Context, page: string): Future[void] {.thread.} =
   ctx.response.body = getPage(page)
   var mimeType = m.getMimetype((page.split(".")[^1]))

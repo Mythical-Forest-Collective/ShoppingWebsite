@@ -1,8 +1,10 @@
 ## AUTOMATICALLY GENERATED!!! DO NOT EDIT!!! ##
-import std/[strformat, strutils, mimetypes]
+import std/[strformat, mimetypes] # `strutils` is already imported in our code
 
 var m = newMimetypes()
+m.register("less", "text/css")
 
+# Automatically get the correct mimetype
 proc returnAppropriateType(ctx: Context, page: string): Future[void] {.thread.} =
   ctx.response.body = getPage(page)
   var mimeType = m.getMimetype((page.split(".")[^1]))
@@ -11,9 +13,6 @@ proc returnAppropriateType(ctx: Context, page: string): Future[void] {.thread.} 
 
 proc serveIndexHtml(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/index.html"))
 app.get("/index.html", serveIndexHtml)
-
-proc serveCssStylesCss(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/css/styles.css"))
-app.get("/css/styles.css", serveCssStylesCss)
 
 proc serveResourcesFontsWizztaTtf(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/resources/fonts/wizzta.ttf"))
 app.get("/resources/fonts/wizzta.ttf", serveResourcesFontsWizztaTtf)
@@ -24,12 +23,12 @@ app.get("/resources/fonts/rudiment.ttf", serveResourcesFontsRudimentTtf)
 proc serveResourcesFontsMagicschoolTtf(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/resources/fonts/magicschool.ttf"))
 app.get("/resources/fonts/magicschool.ttf", serveResourcesFontsMagicschoolTtf)
 
-proc serveResourcesImgsBackground_1920x1080Jpg(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/resources/imgs/background_1920x1080.jpg"))
-app.get("/resources/imgs/background_1920x1080.jpg", serveResourcesImgsBackground_1920x1080Jpg)
-
-proc serveResourcesImgsBackground_3840x2160Jpg(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/resources/imgs/background_3840x2160.jpg"))
-app.get("/resources/imgs/background_3840x2160.jpg", serveResourcesImgsBackground_3840x2160Jpg)
-
 proc serveResourcesImgsBackgroundJpg(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/resources/imgs/background.jpg"))
 app.get("/resources/imgs/background.jpg", serveResourcesImgsBackgroundJpg)
+
+proc serveResourcesScriptsLessJs(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/resources/scripts/less.js"))
+app.get("/resources/scripts/less.js", serveResourcesScriptsLessJs)
+
+proc serveLessStylesLess(ctx: Context) {.async.} = complete(returnAppropriateType(ctx, "html/less/styles.less"))
+app.get("/less/styles.less", serveLessStylesLess)
 
